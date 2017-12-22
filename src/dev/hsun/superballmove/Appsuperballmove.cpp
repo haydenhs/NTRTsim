@@ -37,8 +37,8 @@
 // Bullet Physics
 #include "LinearMath/btVector3.h"
 // The C++ Standard Library
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 /**
  * The entry point.

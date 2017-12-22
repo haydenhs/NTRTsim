@@ -23,14 +23,11 @@
  * $Id$
  */
 //This module
-#include "tgSimpleLogger.h"
-
-//This application
 #include "T6Model.h"
-
-//add std libraries
-#include <iostream>
+#include "tgSimpleLogger.h"
+// The C++ standard library
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 

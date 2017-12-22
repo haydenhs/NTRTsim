@@ -25,9 +25,8 @@
  */
 
 // This module
-#include "T6TensionController.h"
-// This application
 #include "T6Model.h"
+#include "T6TensionController.h"
 // This library
 #include "core/tgBasicActuator.h"
 // The C++ Standard Library

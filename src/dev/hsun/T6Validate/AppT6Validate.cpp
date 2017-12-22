@@ -17,19 +17,19 @@
 */
 
 /**
- * @file AppSimpleModel.cpp
- * @brief Contains the definition function main() for the simple 2-bar
- * tensegrity model application
+ * @file AppT6Validate.cpp
+ * @brief Contains the definition function main() for T6 tensegrity
+ * application to compare with the results obtained from MATLAB.
  * @author hayden sun
+ * @date Dec 18, 2017
  * $Id$
  */
 
-// This module
-#include "SimpleController.h"
-#include "tgSimpleLogger.h"
-#include "SimpleModel.h"
+// This application
+#include "T6Model.h"
 // This library
 #include "core/terrain/tgBoxGround.h"
+#include "core/terrain/tgPlaneGround.h"
 #include "core/tgModel.h"
 #include "core/tgSimViewGraphics.h"
 #include "core/tgSimulation.h"
@@ -45,48 +45,68 @@
  * @param[in] argv argv[0] is the executable name
  * @return 0
  */
+
 int main(int argc, char** argv)
 {
-    std::cout << "AppSimpleModelTest" << std::endl;
+    std::cout << "AppSUPERball" << std::endl;
 
-    // First create the ground and world. Specify ground rotation in radians
+    // First create the ground and world
+    // Determine the angle of the ground in radians. All 0 is flat
     const double yaw = 0.0;
-    const double pitch = 0.0;
+    const double pitch = 0.0;//M_PI/15.0;
     const double roll = 0.0;
+
     const tgBoxGround::Config groundConfig(btVector3(yaw, pitch, roll));
     // the world will delete this
     tgBoxGround* ground = new tgBoxGround(groundConfig);
-    
-    const tgWorld::Config config(0,1000); // gravity, cm/sec^2
+
+    //const tgPlaneGround::Config groundConfig(btVector3(0.0,1.0,0.0));
+    // the world will delete this
+    //tgPlaneGround* ground = new tgPlaneGround(groundConfig);
+
+    // currently we do not need gravity
+    const tgWorld::Config config(0);    
+    //const tgWorld::Config config(98.1); // gravity, cm/sec^2  Use this to adjust length scale of world.
+        // Note, by changing the setting below from 981 to 98.1, we've
+        // scaled the world length scale to decimeters not cm.
     tgWorld world(config, ground);
 
     // Second create the view
-    const double timestep_physics = 0.001; // seconds
-    const double timestep_graphics = 1.f/60.f; // seconds
+    const double timestep_physics = 1.0 / 60.0 / 10.0; // Seconds
+    const double timestep_graphics = 1.f /60.f; // Seconds
+
     tgSimViewGraphics view(world, timestep_physics, timestep_graphics);
+    //tgSimView view(world, timestep_physics, timestep_graphics);
 
     // Third create the simulation
     tgSimulation simulation(view);
 
     // Fourth create the models with their controllers and add the models to the
     // simulation
-    SimpleModel* const myModel = new SimpleModel();
+    T6Model* const myModel = new T6Model("T6Data");
 
     // Fifth, select the controller to use. Uncomment desired controller.
-    // For the SimpleController,
+
+    // For the T6RestLengthController, pass in the amount of cable to contract
+    // in. This is the "rest length difference": the static offset of cable
+    // length between geometric length in equilibrium and the actual rest length
+    // of an individual cable. 
+    // Note for the above scale of gravity, this is in decimeters.
+
+
+    //SuperBallPrefLengthController* const pTC = new SuperBallPrefLengthController(9);
+
+
+    // For the T6TensionController,
     // Set the tension of the controller units of kg * length / s^2
     // So 10000 units at this scale is 1000 N
-    SimpleController* const pTC = new SimpleController(20);
-    
-    // use data logger
-    tgSimpleLogger* const myLogger = new tgSimpleLogger("lengthofstrings.txt");
-    
-    myModel->attach(myLogger);
-    myModel->attach(pTC);  
 
-    // Add the model to the world
+    // T6TensionController* const pTC = new T6TensionController(10000);
+
+    //myModel->attach(pTC);
     simulation.addModel(myModel);
-    
+
+    // Now start simulation
     simulation.run();
 
     //Teardown is handled by delete, so that should be automatic

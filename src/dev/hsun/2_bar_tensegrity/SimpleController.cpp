@@ -25,7 +25,6 @@
 
 // This module
 #include "SimpleController.h"
-// This application
 #include "SimpleModel.h"
 // This library
 #include "core/tgBasicActuator.h"

@@ -22,11 +22,10 @@
  * @author
  * $Id$
  */
-
+// This module
 #include "tgSimpleLogger.h"
-
 #include "SimpleModel.h"
-
+// The C++ Standard Library
 #include <iostream>
 #include <fstream>
 #include <string>

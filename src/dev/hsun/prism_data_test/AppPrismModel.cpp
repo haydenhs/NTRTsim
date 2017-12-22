@@ -17,23 +17,22 @@
 */
 
 /**
- * @file AppSimpleModel.cpp
- * @brief Contains the definition function main() for the simple 2-bar
- * tensegrity model application
- * @author hayden sun
+ * @file AppPrismModel.cpp
+ * @brief Contains the definition function main() for the Three strut
+ * tensegrity prism example application
+ * @author Brian Tietz
  * $Id$
  */
 
-// This module
-#include "SimpleController.h"
-#include "tgSimpleLogger.h"
-#include "SimpleModel.h"
+// This application
+#include "PrismModel.h"
 // This library
 #include "core/terrain/tgBoxGround.h"
 #include "core/tgModel.h"
 #include "core/tgSimViewGraphics.h"
 #include "core/tgSimulation.h"
 #include "core/tgWorld.h"
+#include "sensors/tgDataObserver.h"
 // Bullet Physics
 #include "LinearMath/btVector3.h"
 // The C++ Standard Library
@@ -47,7 +46,7 @@
  */
 int main(int argc, char** argv)
 {
-    std::cout << "AppSimpleModelTest" << std::endl;
+    std::cout << "AppPrismModelTest" << std::endl;
 
     // First create the ground and world. Specify ground rotation in radians
     const double yaw = 0.0;
@@ -57,7 +56,7 @@ int main(int argc, char** argv)
     // the world will delete this
     tgBoxGround* ground = new tgBoxGround(groundConfig);
     
-    const tgWorld::Config config(0,1000); // gravity, cm/sec^2
+    const tgWorld::Config config(981); // gravity, cm/sec^2
     tgWorld world(config, ground);
 
     // Second create the view
@@ -70,23 +69,11 @@ int main(int argc, char** argv)
 
     // Fourth create the models with their controllers and add the models to the
     // simulation
-    SimpleModel* const myModel = new SimpleModel();
-
-    // Fifth, select the controller to use. Uncomment desired controller.
-    // For the SimpleController,
-    // Set the tension of the controller units of kg * length / s^2
-    // So 10000 units at this scale is 1000 N
-    SimpleController* const pTC = new SimpleController(20);
-    
-    // use data logger
-    tgSimpleLogger* const myLogger = new tgSimpleLogger("lengthofstrings.txt");
-    
-    myModel->attach(myLogger);
-    myModel->attach(pTC);  
+    PrismModel* const myModel = new PrismModel("testData");
 
     // Add the model to the world
     simulation.addModel(myModel);
-    
+
     simulation.run();
 
     //Teardown is handled by delete, so that should be automatic
