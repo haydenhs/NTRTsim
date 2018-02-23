@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     //tgPlaneGround* ground = new tgPlaneGround(groundConfig);
 
     // currently we do not need gravity
-    const tgWorld::Config config(0);    
+    const tgWorld::Config config(98.1);    
     //const tgWorld::Config config(98.1); // gravity, cm/sec^2  Use this to adjust length scale of world.
         // Note, by changing the setting below from 981 to 98.1, we've
         // scaled the world length scale to decimeters not cm.

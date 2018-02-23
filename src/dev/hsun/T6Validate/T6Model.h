@@ -54,7 +54,7 @@ public:
     /**
      * The constructor used to log data.
      */
-    T6Model(std::string fileName);
+    T6Model(const std::string& fileName);
 	
     /**
      * Destructor. Deletes controllers, if any were added during setup.

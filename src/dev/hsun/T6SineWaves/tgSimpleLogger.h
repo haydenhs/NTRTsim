@@ -53,6 +53,7 @@ public:
   /** Virtual base classes must have a virtual destructor. */
   virtual ~tgSimpleLogger ();
 
+  virtual void onSetup(T6Model& subject);
 
   virtual void onStep(T6Model& subject, double dt);
   

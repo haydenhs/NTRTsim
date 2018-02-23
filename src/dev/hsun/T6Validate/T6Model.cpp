@@ -40,7 +40,7 @@
 #include <stdexcept>
 #include <vector>
 
-namespace
+/*namespace
 {
     // Parameters obtained from form-finding algorithm in MATLAB
     // In MATLAB file, the rest length for muscle is 8.5 dm.
@@ -79,7 +79,7 @@ namespace
      false,    // moveCablePointAToEdge
      false,    // moveCablePointBToEdge
   };
-} // namespace
+} // namespace*/
 
 // parameters for superBall
 /*namespace
@@ -142,6 +142,48 @@ namespace
 } // namespace
 */
 
+// parameters for real world model in July, 2017
+namespace
+{
+    const struct Config
+    {
+        double density;
+        double radius;
+        double stiffness;
+        double damping;
+        double rod_length;
+        double rod_space;    
+        double friction;
+        double rollFriction;
+        double restitution;
+        double pretension;
+        bool   hist;
+        double maxTens;
+        double targetVelocity;
+        bool moveCPA;
+        bool moveCPB;
+    } c =
+   {
+     2.855,    // density (kg / length^3) ok
+     0.1,     // radius (length) ok
+     206.19,   // stiffness (kg / sec^2) ok
+     100.0,    // damping (kg / sec) ok
+     6,     // rod_length (length) ok
+     1.5,      // rod_space (length) ok
+     0.99,      // friction (unitless) ok
+     0.01,     // rollFriction (unitless) ok
+     0.0,      // restitution (?) ok
+     206.19,   // pretension -> set to 1 * stiffness ok
+     0,         // History logging (boolean)
+     100000,   // maxTens
+     10000,    // targetVelocity
+     true,    // moveCablePointAToEdge
+     true,    // moveCablePointBToEdge
+  };
+} // namespace
+
+
+
 /*
  * helper arrays for node and rod numbering schema
  */
@@ -150,9 +192,10 @@ const int rodNumbersPerNode[12]={0,0,1,1,2,2,3,3,4,4,5,5};
 
 T6Model::T6Model() : tgModel() 
 {
+    m_pDataObserver = NULL;
 }
 
-T6Model::T6Model(std::string fileName) :
+T6Model::T6Model(const std::string& fileName) :
 tgModel() 
 {
     m_pDataObserver = new tgDataObserver(fileName);
@@ -308,7 +351,10 @@ void T6Model::setup(tgWorld& world)
     this->moveModel(location,rotation,speed);
 
     // start an observer    
-    m_pDataObserver->onSetup(*this);
+    if (m_pDataObserver != NULL)
+    {
+        m_pDataObserver->onSetup(*this);
+    } 
 }
 
 void T6Model::step(double dt)
@@ -323,7 +369,10 @@ void T6Model::step(double dt)
         // Notify observers (controllers) of the step so that they can take action
         notifyStep(dt);
         tgModel::step(dt);  // Step any children
-        m_pDataObserver->onStep(*this, dt);
+        if (m_pDataObserver != NULL)
+        {
+            m_pDataObserver->onStep(*this, dt);
+        }
     }
 }
 

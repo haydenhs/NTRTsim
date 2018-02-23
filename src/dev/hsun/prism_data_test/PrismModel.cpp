@@ -83,9 +83,10 @@ const int rodNumbersPerNode[6]={0,1,2,2,0,1};
 PrismModel::PrismModel() :
 tgModel() 
 {
+	m_pObserver = NULL;
 }
 
-PrismModel::PrismModel(std::string fileName) :
+PrismModel::PrismModel(const std::string& fileName) :
 tgModel() 
 {
 	m_pObserver = new tgDataObserver(fileName);
@@ -203,7 +204,10 @@ void PrismModel::setup(tgWorld& world)
     addMarkers(s);
 
     // start an observer
-    m_pObserver->onSetup(*this);
+    if (m_pObserver != NULL)
+    {
+        m_pObserver->onSetup(*this);
+    }  
 
     // Move the structure so it doesn't start in the ground
     s.move(btVector3(0, 10, 0));    
@@ -221,7 +225,10 @@ void PrismModel::step(double dt)
         // Notify observers (controllers) of the step so that they can take action
         notifyStep(dt);
         tgModel::step(dt);  // Step any children
-        m_pObserver->onStep(*this, dt);
+        if (m_pObserver != NULL)
+        {
+            m_pObserver->onStep(*this, dt);
+        }
     }
 }
 

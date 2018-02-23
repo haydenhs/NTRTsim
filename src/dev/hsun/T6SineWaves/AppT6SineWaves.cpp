@@ -26,11 +26,12 @@
 
 // This application
 #include "T6Model.h"
-#include "T6TensionController.h"
+#include "T6SineWaves.h"
 #include "tgSimpleLogger.h"
 // This library
 #include "core/terrain/tgBoxGround.h"
 #include "core/tgModel.h"
+#include "core/tgSimView.h"
 #include "core/tgSimViewGraphics.h"
 #include "core/tgSimulation.h"
 #include "core/tgWorld.h"
@@ -48,7 +49,7 @@
  */
 int main(int argc, char** argv)
 {
-    std::cout << "AppSUPERball" << std::endl;
+    std::cout << "AppT6SinWave" << std::endl;
 
     // First create the ground and world
     
@@ -61,39 +62,51 @@ int main(int argc, char** argv)
     // the world will delete this
     tgBoxGround* ground = new tgBoxGround(groundConfig);
     
-    //const tgWorld::Config config(98.1); // gravity, cm/sec^2  Use this to adjust length scale of world.
+    // const tgWorld::Config config(98.1); // gravity, cm/sec^2  Use this to adjust length scale of world.
         // Note, by changing the setting below from 981 to 98.1, we've
         // scaled the world length scale to decimeters not cm.
-    const tgWorld::Config config(0);
+    const tgWorld::Config config(981);
 
-    tgWorld world(config, ground);
+    tgWorld* world = new tgWorld(config, ground);
 
     // Second create the view
     const double timestep_physics = 0.001; // Seconds
     const double timestep_graphics = 1.f/60.f; // Seconds
-    tgSimViewGraphics view(world, timestep_physics, timestep_graphics);
+    // to start trial multi times, we  use tgSimView instead of tgSimViewGraphics
+    // tgSimViewGraphics* view = new tgSimViewGraphics(world, timestep_physics, timestep_graphics);
+    tgSimView* view = new tgSimView(*world, timestep_physics, timestep_graphics);
 
     // Third create the simulation
-    tgSimulation simulation(view);
+    tgSimulation* simulation = new tgSimulation(*view);
 
     // Fourth create the models with their controllers and add the models to the
     // simulation
     T6Model* const myModel = new T6Model("Testdata");
-
+    // T6Model* const myModel = new T6Model();
     // Fifth, select the controller to use, and attach it to the model.
-    // For example, you could run the following to use the T6TensionController:
-    T6TensionController* const pTC = new T6TensionController(500);
-    // use data logger to get COM
-    //tgSimpleLogger* const myLogger = new tgSimpleLogger("ballCOM.txt");
-    
-    //myModel->attach(myLogger);
-    myModel->attach(pTC);
+    // Required for setting up serialization file input/output.
+    const std::string suffix((argc > 1) ? argv[1] : "controlVars.json");
+      
+    T6SineWaves* const myControl = new T6SineWaves(suffix);
+    myModel->attach(myControl);
+
+    // Sixth, use data logger to get COM.
+    tgSimpleLogger* const myLogger = new tgSimpleLogger("ballCOM.txt");    
+    myModel->attach(myLogger);
 
     // Finally, add out model to the simulation
-    simulation.addModel(myModel);
+    simulation->addModel(myModel);
     
     // Run until the user stops
-    simulation.run();
+    // simulation->run();
+    int nEpisodes = 5; // Number of episodes ("trial runs")
+    int nSteps = 6000; // Number of steps in each episode, 60k is 100 seconds (timestep_physics*nSteps)
+    for (int i=0; i<nEpisodes; i++) 
+    {
+        std::cout << "trial time:" << (i+1) << std::endl;
+        simulation->run(nSteps);
+        simulation->reset();
+    }
 
     //Teardown is handled by delete, so that should be automatic
     return 0;

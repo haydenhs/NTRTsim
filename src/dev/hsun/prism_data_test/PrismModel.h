@@ -58,7 +58,7 @@ public:
     /**
      * The constructor used to log data.
      */
-    PrismModel(std::string fileName);
+    PrismModel(const std::string& fileName);
     
     /**
      * Destructor. Deletes controllers, if any were added during setup.
