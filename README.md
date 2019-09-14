@@ -1,3 +1,4 @@
+### About my work on NTSTsim
 NTRTsim is an important part of my simulation work during a undergraduate research project & thesis. I've done several simulations using evolutionary algorithm and CPG control to generate different gaits for a 6-bar tensegrity robot. Some of the videos can be found at:
 
 * https://youtu.be/bPanVJEUQm8 
