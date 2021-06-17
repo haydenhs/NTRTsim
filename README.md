@@ -1,24 +1,4 @@
-### About my work on NTRTsim
-NTRTsim is an important part of my work at an undergraduate research project and graduation thesis. I've done several simulations using evolutionary algorithm and CPG control to generate different gaits for a 6-bar tensegrity robot. Some of the videos can be found at:
-
-* https://youtu.be/bPanVJEUQm8 
-* https://youtu.be/O7qYjjPgYPE
-* https://youtu.be/QxUbTvVIs3c
-
-Some Gif demos can be found in folder demos:)
-
-* Robot rolling
-![gif](./demos/rolling.gif)
-* Robot rotate
-![gif](./demos/rotateBot.gif)
-* Robot shrink
-![gif](./demos/shrinkBot.gif)
-* Robot move
-![gif](./demos/moveBot.gif)
-* Robot pack
-![gif](./demos/packBot.gif)
-
-However, the code is not provided in this repo as the codes are transfered to other graduate students who are still working on improving the performance of such methods. This is also partly because I've been quite busy since I changed my major from ME to CS. If you have any questions regarding the simulations in above videos, you can email me at hesun@protonmail.com and I'd be happy to answer your questions. Finally, many thanks to the NTRTsim team for sharing the toolkit and it indeed helped me a lot!
+### [My project on tensegrity robot simulation](https://github.com/haydenhs/NTRTsim)
 
 NASA Tensegrity Robotics Toolkit
 ===============
