@@ -1,4 +1,4 @@
-### [My project on tensegrity robot simulation](https://github.com/haydenhs/NTRTsim)
+### [My project on tensegrity robot simulation](https://haydenhs.github.io/NTRTsim/)
 
 NASA Tensegrity Robotics Toolkit
 ===============
